@@ -2,9 +2,11 @@ from aiogram import Router, F
 from aiogram.enums import ParseMode
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message, CallbackQuery
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from bot.keyboards.admin_keyboards import choose_see_forms_button
 from bot.keyboards.main_keyboards import home_button
+from bot.keyboards.registration_keyboards import choose_area_button, get_number_button, choose_category_button
 from bot.states.registration_states import RegistrationStates
 from create_bot import bot
 
@@ -76,7 +78,7 @@ async def get_contact(callback: CallbackQuery, state: FSMContext):
 
 
 @registration_router.message(F.contact, RegistrationStates.registration_user)
-async def registration_user(message: Message, state: FSMContext):
+async def registration_user(message: Message, state: FSMContext, db: AsyncSession):
     await state.update_data(contact=message.contact.phone_number)
     await bot.delete_message(chat_id=message.chat.id, message_id=message.message_id - 1)
     await bot.delete_message(chat_id=message.chat.id, message_id=message.message_id)
