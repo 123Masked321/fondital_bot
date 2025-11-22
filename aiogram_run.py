@@ -1,33 +1,27 @@
 import asyncio
-from create_bot import bot, dp, db
-from handlers.prolife import profile_router
-from handlers.user_router import user_router
-from handlers.registration import registration_router
-from handlers.start import start_router
-from handlers.admin.admin_router import admin_router
-from handlers.admin.add_product_router import add_product_router
-from handlers.admin.delete_product_router import delete_product_router
-from handlers.payment import payment_router
+
+from bot.middlewares.database_session import DbSessionMiddleware
+from create_bot import bot, dp
+
+from bot.handlers.user.prolife import profile_router
+from bot.handlers.user.user_router import user_router
+from bot.handlers.admin.admin_router import admin_router
+from bot.handlers.user.registration import registration_router
+from bot.handlers.user.start import start_router
+from bot.handlers.admin.add_product_router import add_product_router
+from bot.handlers.admin.delete_product_router import delete_product_router
+from bot.handlers.user.payment import payment_router
+
 from aiogram.types import BotCommand, BotCommandScopeDefault
 
 
-# Функция, которая настроит командное меню (дефолтное для всех пользователей)
 async def set_commands():
-    commands = [BotCommand(command='start', description='Старт'),
-                BotCommand(command='profile', description='Переглянути профіль'),
-                BotCommand(command='donate', description='Подяка проекту(тільки при бажанні)')]
+    commands = [
+        BotCommand(command="start", description="Старт"),
+        BotCommand(command="profile", description="Профіль"),
+        BotCommand(command="donate", description="Підтримати проєкт"),
+    ]
     await bot.set_my_commands(commands, BotCommandScopeDefault())
-
-
-# Функция, которая выполнится когда бот запустится
-async def start_bot():
-    await set_commands()
-    await db.connect()
-
-
-# Функция, которая выполнится когда бот завершит свою работу
-async def stop_bot():
-    await db.close()
 
 
 async def main():
@@ -40,14 +34,13 @@ async def main():
     dp.include_router(profile_router)
     dp.include_router(payment_router)
 
-    dp.startup.register(start_bot)
-    dp.shutdown.register(stop_bot)
+    dp.message.middleware(DbSessionMiddleware)
+    dp.callback_query.middleware(DbSessionMiddleware)
 
-    try:
-        await bot.delete_webhook(drop_pending_updates=True)
-        await dp.start_polling(bot, allowed_updates=dp.resolve_used_update_types())
-    finally:
-        await bot.session.close()
+    await set_commands()
+
+    await bot.delete_webhook(drop_pending_updates=True)
+    await dp.start_polling(bot)
 
 
 if __name__ == "__main__":
