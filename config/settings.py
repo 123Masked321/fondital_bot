@@ -11,10 +11,10 @@ class Settings(BaseSettings):
 
     TOKEN: str
 
-    AWS_ACCESS_KEY: str | None = None
-    AWS_SECRET_KEY: str | None = None
-    AWS_BUCKET: str | None = None
-    AWS_REGION: str | None = None
+    AWS_ACCESS_KEY: str
+    AWS_SECRET_KEY: str
+    AWS_BUCKET: str
+    AWS_REGION: str
 
     @property
     def DATABASE_URL(self) -> str:
