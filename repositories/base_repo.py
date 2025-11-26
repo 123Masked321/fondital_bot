@@ -1,6 +1,6 @@
 from typing import TypeVar, Generic, Type, Any
 
-from sqlalchemy import select, update
+from sqlalchemy import select, update, func
 from sqlalchemy.ext.asyncio import AsyncSession
 
 Model = TypeVar("Model")
@@ -14,15 +14,20 @@ class BaseRepository(Generic[Model]):
     async def get_by_id(self, obj_id: int) -> Model | None:
         return await self.session.get(self.model, obj_id)
 
-    async def get_one(self, **values: Any) -> Model | None:
+    async def get_first(self, **values: Any) -> Model | None:
         q = select(self.model).filter_by(**values)
         res = await self.session.execute(q)
-        return res.scalar_one_or_none()
+        return res.scalars().first()
 
     async def list(self, **values: Any) -> list[Model]:
         q = select(self.model).filter_by(**values)
         res = await self.session.execute(q)
         return list(res.scalars().all())
+
+    async def count(self, **values: Any) -> int:
+        q = select(func.count()).select_from(self.model).filter_by(**values)
+        res = await self.session.execute(q)
+        return int(res.scalar_one())
 
     async def create(self, obj: Model) -> Model:
         self.session.add(obj)

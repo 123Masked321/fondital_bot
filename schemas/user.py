@@ -9,7 +9,7 @@ class UserBase(BaseModel):
     city: Optional[str] = None
     category: Optional[str] = None
     phone: Optional[str] = None
-    role: Literal["user", "admin", "spec"]
+    role: Literal["user", "admin", "spec"] = "user"
     is_processed: bool = True
 
     @field_validator("phone")

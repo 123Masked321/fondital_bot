@@ -10,7 +10,7 @@ class BoilerBrand(Base):
     brand_name: Mapped[str] = mapped_column(String(128), nullable=False, unique=True)
     description: Mapped[str]
     photo_path_from_s3: Mapped[str]
-    photo_path_telegram_id: Mapped[int]
+    photo_path_telegram_id: Mapped[str]
 
     models = relationship("BoilerModel", back_populates="brand")
     errors = relationship("BoilerError", back_populates="brand")
@@ -47,7 +47,7 @@ class BoilerError(Base):
 
 class BoilerModel(Base):
     __tablename__ = 'boiler_models'
-    __table_args__ = {UniqueConstraint("brand_id", "type_id", "model_name", name="unique_boiler_model")}
+    __table_args__ = (UniqueConstraint("brand_id", "type_id", "model_name", name="unique_boiler_model"))
 
     id: Mapped[int] = mapped_column(primary_key=True)
     brand_id: Mapped[int] = mapped_column(ForeignKey('boiler_brands.id'))
@@ -69,6 +69,7 @@ class BoilerInstructions(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     model_id: Mapped[int] = mapped_column(ForeignKey('boiler_models.id'))
     doc_name: Mapped[str]
+    description: Mapped[str]
     doc_path_from_s3: Mapped[str]
     doc_path_telegram_id: Mapped[str]
     access: Mapped[str] = mapped_column(String(20))
@@ -80,13 +81,13 @@ class User(Base):
     __tablename__ = 'users'
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    telegram_id: Mapped[int] = mapped_column(BigInteger, nullable=False)
+    telegram_id: Mapped[int] = mapped_column(BigInteger, nullable=False, unique=True)
     username: Mapped[str]
     full_name: Mapped[str]
     area: Mapped[str]
     city: Mapped[str]
     phone: Mapped[str]
-    categories: Mapped[str]
+    category: Mapped[str]
     role: Mapped[str] = mapped_column(default='user')
     is_processed: Mapped[bool] = mapped_column(Boolean, default=True)
 

@@ -109,16 +109,6 @@ class Database:
         async with self.pool.acquire() as conn:
             return await conn.fetchrow(query, telegram_id)
 
-    # async def update_lang_user(self, user_id: int, lang: str):
-    #     query = "UPDATE users SET lang = $1 WHERE telegram_id = $2"
-    #     async with self.pool.acquire() as conn:
-    #         await conn.execute(query, lang, user_id)
-    #
-    # async def get_lang_user(self, user_id: int):
-    #     query = "SELECT lang FROM users WHERE telegram_id = $1"
-    #     async with self.pool.acquire() as conn:
-    #         return await conn.fetchval(query, user_id)
-
     async def get_role_user(self, user_id: int):
         query = "SELECT role FROM users WHERE telegram_id = $1"
         async with self.pool.acquire() as conn:
