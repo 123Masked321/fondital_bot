@@ -1,5 +1,4 @@
 from typing import TypeVar, Generic, Type, Any
-
 from sqlalchemy import select, update, func
 from sqlalchemy.ext.asyncio import AsyncSession
 

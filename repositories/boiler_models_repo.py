@@ -1,5 +1,4 @@
 from sqlalchemy.ext.asyncio import AsyncSession
-
 from database.models import BoilerModel
 from repositories.boiler_base_repo import BoilerBaseRepository
 

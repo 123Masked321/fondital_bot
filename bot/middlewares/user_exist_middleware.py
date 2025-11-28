@@ -3,7 +3,6 @@ from typing import Callable, Dict, Any, Awaitable
 from aiogram import BaseMiddleware
 from aiogram.types import Message
 
-from create_bot import db
 from bot.handlers import start_message
 from bot.keyboards.registration_keyboards import choose_role_button
 from bot.states.registration_states import RegistrationStates
