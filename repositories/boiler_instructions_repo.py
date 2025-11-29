@@ -4,9 +4,7 @@ from repositories.boiler_base_repo import BoilerBaseRepository
 
 
 class BoilerInstructionsRepository(BoilerBaseRepository[BoilerInstructions]):
-    description_attribute: str = 'description'
-    photo_from_s3_url_attribute: str = 'doc_path_from_s3'
-    photo_from_telegram_id_attribute: str = 'doc_path_telegram_id'
+    file_id_attribute: str = 'file_id'
 
     def __init__(self, session: AsyncSession) -> None:
         super().__init__(session, BoilerInstructions)

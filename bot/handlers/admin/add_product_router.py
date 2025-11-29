@@ -13,7 +13,6 @@ from bot.keyboards.admin_keyboards import *
 add_product_router = Router()
 
 
-
 @add_product_router.callback_query(F.data == "add")
 async def choose_category(callback: CallbackQuery, state: FSMContext):
     await state.update_data(action=callback.data)

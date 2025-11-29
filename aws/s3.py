@@ -25,13 +25,13 @@ class S3Client:
         async with self.session.create_client('s3', **self.config) as client:
             yield client
 
-    async def upload_fileobj(self, file_data: BytesIO, object_name: str):
-        file_data.seek(0)
+    async def upload_fileobj(self, file_data: bytes, object_name: str):
+        file_bytes = BytesIO(file_data)
         async with self.get_client() as client:
             await client.put_object(
                 Bucket=self.bucket_name,
                 Key=object_name,
-                Body=file_data
+                Body=file_bytes
             )
 
     # async def upload_file(

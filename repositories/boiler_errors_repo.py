@@ -9,7 +9,7 @@ class BoilerErrorsRepository(BoilerBaseRepository[BoilerError]):
         super().__init__(session, BoilerError)
 
     @staticmethod
-    def _sort_key(self, code: str) -> tuple[str, int]:
+    def _sort_key(code: str) -> tuple[str, int]:
         letters = "".join(ch for ch in code if not ch.isdigit())
         digits = "".join(ch for ch in code if ch.isdigit())
         num = int(digits) if digits else 0
